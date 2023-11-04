@@ -1,0 +1,30 @@
+/* Apply basic styling to the popup */
+body {
+    font-family: Arial, sans-serif;
+    text-align: left;
+    margin: 20;
+    padding: 50px;
+  }
+  
+  h1 {
+    color: #333;
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+  
+  /* Style the on/off button */
+  #toggleExtension {
+    background-color: #0073e6;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  #toggleExtension:hover {
+    background-color: #0059b3;
+  }
+  
+  /* You can add more styles as needed for other elements in your popup */
+  
