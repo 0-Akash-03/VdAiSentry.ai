@@ -1,21 +1,43 @@
-// Listen for messages from your popup.js or content scripts
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.action === "toggleExtension") {
-    // Handle the logic for enabling or disabling your AI model here
-    // You can communicate with your AI service and modify the behavior accordingly.
-    const isExtensionEnabled = request.isEnabled; // You might pass this information from your popup.js
+// background.js
 
-    // Example: Store the enabled/disabled status in Chrome's local storage
-    chrome.storage.local.set({ "extensionEnabled": isExtensionEnabled }, function () {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError);
-      }
-    });
+// Import TensorFlow.js library
+import * as tf from 'tensorflow';
+
+// Define a function to load the model
+async function loadModel() {
+  // Replace 'path_to_model' with the actual path to your model files
+  const modelPath = chrome.runtime.getURL('path_to_model/model.json');
+
+  try {
+    const model = await tf.loadLayersModel(modelPath);
+    return model;
+  } catch (error) {
+    console.error('Failed to load the model:', error);
+    return null;
   }
-});
+}
 
-// Optionally, you can retrieve the extension's state from local storage
-chrome.storage.local.get(["extensionEnabled"], function (result) {
-  const isExtensionEnabled = result.extensionEnabled;
-  // Implement logic here to set the extension's state based on the value retrieved
+// Load the model when the extension starts
+let loadedModel;
+
+loadModel()
+  .then((model) => {
+    if (model) {
+      loadedModel = model;
+      console.log('Model loaded successfully.');
+    }
+  })
+  .catch((error) => {
+    console.error('Model loading error:', error);
+  });
+
+// Listen for messages from content scripts
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'analyzeUserVideo') {
+    // Use 'loadedModel' for video analysis
+    // Example: const result = loadedModel.predict(message.videoFile);
+
+    // Send the analysis result back to the content script
+    // sendResponse({ result });
+  }
 });

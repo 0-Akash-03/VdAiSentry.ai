@@ -1,15 +1,20 @@
-document.getElementById('toggleExtension').addEventListener('click', function() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    const tab = tabs[0];
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      function: toggleExtension,
-    });
-  });
-});
+// popup.js
 
-function toggleExtension() {
-  // Implement the logic to enable or disable your AI model
-  // You may need to communicate with your AI model hosted elsewhere
-  // and modify the webpage accordingly.
-}
+document.getElementById('analyzeButton').addEventListener('click', () => {
+  const videoInput = document.getElementById('videoInput');
+  const resultDisplay = document.getElementById('resultDisplay');
+
+  const selectedFile = videoInput.files[0];
+
+  if (selectedFile) {
+    // You have the selected video file here (selectedFile).
+    // You can choose to send this file for analysis in the background script.
+    
+    // Example: Send the selected file to the background script
+    chrome.runtime.sendMessage({ action: 'analyzeUserVideo', videoFile: selectedFile }, (response) => {
+      resultDisplay.textContent = `Analysis Result: ${response.result}`;
+    });
+  } else {
+    resultDisplay.textContent = 'Please select a video file.';
+  }
+});
